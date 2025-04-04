@@ -1,15 +1,20 @@
 package pojo;
 
+import com.fasterxml.jackson.annotation.JacksonAnnotation;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.Objects;
 
-public class AdditionRequest {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class Addition {
+    public Integer id;
     public String additional_info;
     public Integer additional_number;
 
-    public AdditionRequest() {
+    public Addition() {
 
     }
-    public AdditionRequest(String additional_info, Integer additional_number) {
+    public Addition(String additional_info, Integer additional_number) {
         this.additional_info = additional_info;
         this.additional_number = additional_number;
     }
@@ -17,28 +22,13 @@ public class AdditionRequest {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AdditionRequest that = (AdditionRequest) o;
+        Addition that = (Addition) o;
         return Objects.equals(additional_info, that.additional_info) && Objects.equals(additional_number, that.additional_number);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(additional_info, additional_number);
-    }
-    public String getAdditional_info() {
-        return additional_info;
-    }
-
-    public void setAdditional_info(String additional_info) {
-        this.additional_info = additional_info;
-    }
-
-    public Integer getAdditional_number() {
-        return additional_number;
-    }
-
-    public void setAdditional_number(Integer additional_number) {
-        this.additional_number = additional_number;
     }
 }
 

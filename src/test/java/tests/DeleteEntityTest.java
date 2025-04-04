@@ -1,31 +1,20 @@
 package tests;
 
-import helpers.BaseRequest;
-import helpers.EntityRequestFactory;
-import helpers.Property;
+import helpers.EntityFactory;
 import io.qameta.allure.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pojo.EntityRequest;
+import pojo.Entity;
 
-import static io.restassured.RestAssured.given;
-
-public class DeleteEntityTest {
-    EntityRequest entityRequest;
-    String entityID;
+public class DeleteEntityTest extends BaseTest {
 
     @BeforeMethod
     @Step("Создание нового Entity для тестирования")
-    public void createEntity() {
-        entityRequest = EntityRequestFactory.createDefaultEntityRequest(10);
-        entityID = given()
-                .spec(BaseRequest.initRequestSpecification())
-                .body(entityRequest)
-                .when()
-                .post(Property.getProperty("properties.api.post_path"))
-                .then()
-                .statusCode(200)
-                .extract().asString();
+    public void setUp() {
+        Entity entity = EntityFactory.generateEntity();
+        String id = createEntity(entity);
+        entityRequests.add(entity);
+        entityIDs.add(id);
     }
 
     @Test
@@ -33,11 +22,6 @@ public class DeleteEntityTest {
     @Severity(SeverityLevel.CRITICAL)
     @Feature("API")
     public void testEntityDelete() {
-        given()
-                .spec(BaseRequest.initRequestSpecification())
-                .when()
-                .delete(Property.getProperty("properties.api.delete_path") + entityID)
-                .then()
-                .statusCode(204);
+        deleteAllCreatedEntities();
     }
 }

@@ -1,42 +1,28 @@
 package tests;
 
 import helpers.BaseRequest;
-import helpers.EntityRequestFactory;
+import helpers.EntityFactory;
 import helpers.Property;
 import io.qameta.allure.*;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pojo.EntityRequest;
-import pojo.EntityResponse;
+import pojo.Entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-public class GetEntityTest {
-    List<EntityRequest> entityRequests;
-    List<String> entityIDs;
+public class GetEntityTest extends BaseTest {
 
     @BeforeMethod
     @Step("Создание новых Entity для тестирования")
-    public void createEntities() {
-        entityRequests = new ArrayList<>();
-        entityIDs = new ArrayList<>();
+    public void setUp() {
         for (int i = 1; i < 4; i++) {
-            EntityRequest entity = EntityRequestFactory.createDefaultEntityRequest(i);
-            String entityId = given()
-                    .spec(BaseRequest.initRequestSpecification())
-                    .body(entity)
-                    .when()
-                    .post(Property.getProperty("properties.api.post_path"))
-                    .then()
-                    .statusCode(200)
-                    .extract().asString();
-
-            entityRequests.add(entity);
-            entityIDs.add(entityId);
+            Entity request = EntityFactory.generateEntity();
+            String id = createEntity(request);
+            entityRequests.add(request);
+            entityIDs.add(id);
         }
     }
 
@@ -47,13 +33,14 @@ public class GetEntityTest {
     public void testEntityGet() {
         for (int i = 0; i < entityRequests.size(); i++) {
             String id = entityIDs.get(i);
-            EntityResponse entityResponse = given()
+            Entity entityResponse = given()
                     .spec(BaseRequest.initRequestSpecification())
                     .when()
                     .get(Property.getProperty("properties.api.get_path") + id)
                     .then()
-                    .extract().as(EntityResponse.class);
-            BaseRequest.compareEntityRequestAndResponseWithoutID(entityRequests.get(i), entityResponse);
+                    .statusCode(200)
+                    .extract().as(Entity.class);
+            compareEntityRequestAndResponseWithoutID(entityRequests.get(i), entityResponse);
         }
     }
 
@@ -62,7 +49,7 @@ public class GetEntityTest {
     @Severity(SeverityLevel.CRITICAL)
     @Feature("API")
     public void testEntityGetAll() {
-        List<EntityResponse> entityResponses = given()
+        List<Entity> entityResponses = given()
                 .spec(BaseRequest.initRequestSpecification())
                 .when()
                 .get(Property.getProperty("properties.api.getall_path"))
@@ -71,18 +58,15 @@ public class GetEntityTest {
                 .extract()
                 .response()
                 .jsonPath()
-                .getList("entity", EntityResponse.class);
+                .getList("entity", Entity.class);
 
         for(int i = 0; i < entityRequests.size(); i++){
-            BaseRequest.compareEntityRequestAndResponseWithoutID(entityRequests.get(i), entityResponses.get(i));
+            compareEntityRequestAndResponseWithoutID(entityRequests.get(i), entityResponses.get(i));
         }
     }
 
     @AfterMethod
-    @Step("Удаление созданных Entity")
-    public void deleteEntitiesAfterTest() {
-        for (String id : entityIDs) {
-            BaseRequest.deleteEntityByID(id);
-        }
+    public void tearDown() {
+        deleteAllCreatedEntities();
     }
 }
