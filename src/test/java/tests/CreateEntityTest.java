@@ -13,8 +13,7 @@ import pojo.Entity;
 
 import static io.restassured.RestAssured.given;
 
-
-public class CreateEntityTest extends BaseTest{
+public class CreateEntityTest extends BaseTest {
     @Test
     @Description("Тест проверяет создание нового Entity")
     @Severity(SeverityLevel.CRITICAL)

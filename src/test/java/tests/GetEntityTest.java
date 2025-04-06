@@ -12,7 +12,6 @@ import pojo.Entity;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
-
 public class GetEntityTest extends BaseTest {
 
     @BeforeMethod

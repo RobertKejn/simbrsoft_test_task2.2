@@ -56,7 +56,6 @@ public class UpdateEntityTest extends BaseTest {
                 .extract().as(Entity.class);
 
         compareEntityRequestAndResponseWithoutID(entityRequest, updatedEntityRequest);
-
     }
 
     @AfterMethod

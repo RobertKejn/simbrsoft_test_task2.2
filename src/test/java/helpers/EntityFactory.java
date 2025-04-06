@@ -38,7 +38,7 @@ public class EntityFactory {
         boolean verified = title.length() % 2 == 0;
         request.verified = verified;
 
-        int maxImpNumbs = Integer.parseInt(Property.getProperty("property.maximpnumbs"));
+        int maxImpNumbs = Property.getPropertyInt("property.maximpnumbs");
         List<Integer> nums = new ArrayList<>();
         int len = r.nextInt(maxImpNumbs);
         while (nums.size() < len+1) nums.add(r.nextInt(100));
@@ -47,7 +47,7 @@ public class EntityFactory {
         Addition addition = new Addition();
         addition.id = null;
 
-        int infoLength = Integer.parseInt(Property.getProperty("property.infolength"));
+        int infoLength = Property.getPropertyInt("property.infolength");
         String info = "info_";
         while (info.length() < infoLength) info += (char)((int)'a' + r.nextInt(26));
         addition.additional_info = info;

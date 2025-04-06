@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 import pojo.Entity;
 
 public class DeleteEntityTest extends BaseTest {
-
     @BeforeMethod
     @Step("Создание нового Entity для тестирования")
     public void setUp() {
